@@ -1,15 +1,23 @@
+# Use node:22-alpine as base image
 FROM node:22-alpine
 
+# Set working directory in container
 WORKDIR /app
 
-RUN npm install -g pnpm
+# Enable corepack for pnpm
+RUN corepack enable
 
-COPY package*.json .
+# Copy package files
+COPY package.json pnpm-lock.yaml .
 
-RUN pnpm install
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
+# Copy source code to container
 COPY . .
 
-CMD ["pnpm","run","dev"]
-
+# Expose port 5173
 EXPOSE 5173
+
+# Start development server
+CMD ["pnpm","run","dev"]
